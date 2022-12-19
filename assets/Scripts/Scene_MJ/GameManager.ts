@@ -57,11 +57,25 @@ export default class GameManager extends NetComponent {
   prefab = null;
   mjs: any[];
   autoSort = null;
+  @property(cc.Node)
+  messageBoard = null;
   start() {
     if (!this.autoSort) {
       this.autoSort = this.getComponent(AutoSort);
     }
     this.init();
+    globalThis.showMessage = this.showMessage.bind(this);
+  }
+  showMessage(msg: string) {
+    if (!this.messageBoard) return;
+    this.messageBoard.children.forEach((child) => {
+      const label = child.getComponent(cc.Label);
+      label.string = msg;
+      this.messageBoard.active = true;
+      setTimeout(() => {
+        this.messageBoard.active = false;
+      }, 1000);
+    });
   }
   init() {
     if (this.loading) {
